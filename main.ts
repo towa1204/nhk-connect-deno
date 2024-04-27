@@ -2,9 +2,9 @@ import "https://deno.land/std@0.223.0/dotenv/load.ts";
 import { ProgramListReq, ServiceProgramList } from "./types.ts";
 
 const baseUrl = "https://api.nhk.or.jp/v2";
-const apiKey = Deno.env.get("APIKEY");
+const apiKey = Deno.env.get("API_KEY");
 if (apiKey == null) {
-  throw new Error(".envにAPIKEYが見つかりません。");
+  throw new Error(".envにAPI_KEYが見つかりません。");
 }
 
 // APIラッパー的なものを作ろう
