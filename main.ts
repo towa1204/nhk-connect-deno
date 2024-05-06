@@ -1,29 +1,16 @@
 import "https://deno.land/std@0.223.0/dotenv/load.ts";
-import { ProgramListReq, ServiceProgramList } from "./types.ts";
+import { ProgramListReq } from "./types.ts";
+import { fetchProgramList } from "./api/nhk_client.ts";
 
-const baseUrl = "https://api.nhk.or.jp/v2";
 const apiKey = Deno.env.get("API_KEY");
 if (apiKey == null) {
   throw new Error(".envにAPI_KEYが見つかりません。");
 }
 
-// APIラッパー的なものを作ろう
-async function fetchProgramList(
-  { area, service, date, apikey }: ProgramListReq,
-): Promise<ServiceProgramList> {
-  const res = await fetch(
-    `${baseUrl}/pg/list/${area}/${service}/${date}.json?key=${apikey}`,
-  );
-  if (!res.ok) {
-    throw new Error("ProgramList APIへの接続に失敗しました。");
-  }
-  return await res.json() as ServiceProgramList;
-}
-
 const req: ProgramListReq = {
   area: "130",
   service: "tv",
-  date: "2024-04-27",
+  date: "2024-05-06",
   apikey: apiKey,
 };
 
