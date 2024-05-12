@@ -6,6 +6,11 @@ export interface ProgramListReq {
   apikey: string;
 }
 
+/** Program List APIのレスポンス */
+export interface ProgramListRes {
+  list: ServiceProgramList;
+}
+
 /** サービスごとの番組リスト */
 export interface ServiceProgramList {
   /** サービスID: 番組リスト */

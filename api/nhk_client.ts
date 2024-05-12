@@ -1,9 +1,12 @@
 import { API_BASE_PATH } from "../config.ts";
-import { ProgramListReq, ServiceProgramList } from "../types.ts";
+import { ProgramListReq, ProgramListRes } from "../types.ts";
 
+/**
+ * Program List API
+ */
 export async function fetchProgramList(
   { area, service, date, apikey }: ProgramListReq,
-): Promise<ServiceProgramList> {
+): Promise<ProgramListRes> {
   const res = await fetch(
     `${API_BASE_PATH}/pg/list/${area}/${service}/${date}.json?key=${apikey}`,
   );
@@ -15,5 +18,5 @@ export async function fetchProgramList(
     ].join("\n");
     throw new Error(errorMessage);
   }
-  return await res.json() as ServiceProgramList;
+  return await res.json() as ProgramListRes;
 }
