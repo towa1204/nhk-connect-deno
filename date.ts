@@ -20,7 +20,7 @@ export function getWeekDates(date: Date) {
  * @param date Dateオブジェクト
  * @returns YYYY-MM-DD
  */
-export function convertNHKDateFormat(dateObject: Date) {
+export function convertNHKFormat(dateObject: Date) {
   const { year, month, date } = getJSTDateParts(dateObject);
   return `${year}-${month}-${date}`;
 }
@@ -50,4 +50,15 @@ export function getJSTDateParts(dateObject: Date) {
     "minutes": ("0" + jstDate.getUTCMinutes()).slice(-2),
     "seconds": ("0" + jstDate.getUTCSeconds()).slice(-2),
   };
+}
+
+/**
+ * ISO8601拡張形式の日付をJSTの MM/DD hh:mm 形式に変換する
+ * @param iso8601extDate ISO8601拡張形式に日付文字列
+ */
+export function convertJSTMMDDhhmmFormat(iso8601extDate: string) {
+  const { month, date, hours, minutes } = getJSTDateParts(
+    new Date(iso8601extDate),
+  );
+  return `${month}/${date} ${hours}:${minutes}`;
 }

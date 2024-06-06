@@ -91,3 +91,36 @@ export interface Service {
   /** サービスロゴ画像:大 */
   logo_l: Logo;
 }
+
+/** 視聴番組 */
+// Pick使ってもいいかも
+export interface WatchProgram {
+  title: string;
+  subtitle: string;
+  content: string;
+  act: string;
+  genres: string[];
+  start_time: string;
+  end_time: string;
+}
+
+/** 日次・週次APIリクエスト */
+export interface NotifyRequest {
+  /** 放送地域 */
+  area: string;
+
+  /** 放送サービス */
+  services: string[];
+
+  /** 番組タイトル */
+  titles: string[];
+
+  /** 放映日 */
+  date: Date;
+
+  /** NHK番組表APIキー */
+  nhkAPIKey: string;
+
+  /** 通知アプリケーションのAPIキー */
+  notifyAPIKey: string;
+}
