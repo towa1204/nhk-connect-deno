@@ -5,10 +5,16 @@ export function getNextDate(date: Date) {
   return nextDate;
 }
 
+export function getNextWeekDate(date: Date) {
+  const nextDate = new Date(date);
+  nextDate.setDate(date.getDate() + 7);
+  return nextDate;
+}
+
 // 与えられたDateオブジェクトの日付から1週間分の日付のDateオブジェクトの配列を返す
-export function getWeekDates(date: Date) {
+export function getNextWeekDates(date: Date) {
   const weekDates: Date[] = [];
-  for (let i = 0; i < 7; i++) {
+  for (let i = 0; i <= 7; i++) {
     weekDates.push(date);
     date = getNextDate(date);
   }

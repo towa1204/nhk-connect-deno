@@ -105,22 +105,33 @@ export interface WatchProgram {
 }
 
 /** 日次・週次APIリクエスト */
-export interface NotifyRequest {
+export interface ProgramsListReq {
   /** 放送地域 */
   area: string;
 
   /** 放送サービス */
   services: string[];
 
-  /** 番組タイトル */
-  titles: string[];
-
-  /** 放映日 */
-  date: Date;
+  /** 放映日(YYYY-MM-dd形式) */
+  dates: string[];
 
   /** NHK番組表APIキー */
   nhkAPIKey: string;
+}
 
-  /** 通知アプリケーションのAPIキー */
-  notifyAPIKey: string;
+/** LINE Messaging Push APIのラッパーの引数 */
+export interface LinePushRequest {
+  /** ユーザID */
+  userID: string;
+
+  /** アクセストークン */
+  accessToken: string;
+
+  /** 送信するメッセージ(※1件のみ想定) */
+  message: string;
+}
+
+export interface Notifier {
+  createMessage: (programs: Program[], header: string) => string;
+  notifyMessage: (request: LinePushRequest) => void;
 }
