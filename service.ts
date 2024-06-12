@@ -32,6 +32,12 @@ export async function notifyWatchPrograms(type: "daily" | "weekly") {
   );
   console.log(`取得した視聴番組数：${watchPrograms.length}`);
 
+  /** 視聴番組がない場合は通知せず終了する */
+  if (watchPrograms.length === 0) {
+    console.log("視聴番組がないため通知せず終了");
+    return;
+  }
+
   /**
    * 3. 通知用メッセージの作成
    * secrets.jsonから通知タイプ取得
