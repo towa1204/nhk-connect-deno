@@ -1,12 +1,15 @@
 import { Program, ProgramsListReq, WatchProgram } from "./types.ts";
 import { fetchProgramList } from "./client/nhk_client.ts";
 import { createLINEMessage, sendLINEMessage } from "./client/line_client.ts";
-import secrets from "./secrets.json" with { type: "json" };
 import { ExecuteType } from "./config.ts";
+import { Config } from "./schema.ts";
 
-export async function notifyWatchPrograms(type: "daily" | "weekly") {
+export async function notifyWatchPrograms(
+  config: Config,
+  type: "daily" | "weekly",
+) {
   const executeType = new ExecuteType(type);
-  const watchProgramKeywords = secrets.subscribePrograms.map((program) =>
+  const watchProgramKeywords = config.programs.map((program) =>
     program.keyword
   );
 
@@ -15,10 +18,10 @@ export async function notifyWatchPrograms(type: "daily" | "weekly") {
    * Serviceの数だけリクエストを実施
    */
   const programs = await fetchProgramsByDates({
-    area: secrets.area,
-    services: secrets.services,
+    area: config.area,
+    services: config.services,
     dates: executeType.requestNHKDates,
-    nhkAPIKey: secrets.nhkAPIKey,
+    nhkAPIKey: config.nhkAPIKey,
   });
   console.log(`取得した番組数：${programs.length}`);
 
@@ -40,12 +43,12 @@ export async function notifyWatchPrograms(type: "daily" | "weekly") {
 
   /**
    * 3. 通知用メッセージの作成
-   * secrets.jsonから通知タイプ取得
+   * 設定情報から通知タイプ取得
    * 通知タイプをもとに通知先を切り替える
    */
-  console.log(`通知先：${secrets.notifyService.selectNow}`);
-  if (secrets.notifyService.selectNow === "line") {
-    const lineAPI = secrets.notifyService.lineAPI;
+  console.log(`通知先：${config.selectNow}`);
+  if (config.selectNow === "LINE") {
+    const lineAPI = config.LINEAPI;
     const notifyMessage = createLINEMessage(
       executeType.messageHeader,
       watchPrograms,
