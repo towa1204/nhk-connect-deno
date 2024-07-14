@@ -8,8 +8,15 @@ import {
   SetProgramSchema,
 } from "./schema.ts";
 import { loadConfig } from "./config.ts";
+import { resMessage } from "./util/message.ts";
 
 export function registRouter(app: Hono, kv: Deno.Kv) {
+  app.use("/config/*", async (c, next) => {
+    console.log("Hello!");
+    console.log(c.req.query("key"));
+    await next();
+  });
+
   app.get("/config/all", GetConfig);
 
   app.post("/config/programs", SetPrograms);
@@ -22,7 +29,7 @@ export function registRouter(app: Hono, kv: Deno.Kv) {
       return c.json(config);
     } catch (err) {
       console.error(err);
-      return c.json("Error", 500);
+      return c.json(resMessage("Load Config Error"), 500);
     }
   }
 
@@ -32,7 +39,7 @@ export function registRouter(app: Hono, kv: Deno.Kv) {
     const validationResult = SetProgramSchema.safeParse(requestJson);
     if (!validationResult.success) {
       console.log(validationResult.error.issues);
-      return c.json("Invalid Body", 401);
+      return c.json(resMessage("Invalid JSON"), 400);
     }
     const validatedPrograms: SetProgramRequest = requestJson;
 
@@ -45,7 +52,7 @@ export function registRouter(app: Hono, kv: Deno.Kv) {
       c.json("Failed set programs", 500);
     }
 
-    return c.json("OK");
+    return c.json(resMessage("OK"));
   }
 
   async function SetNHKAPI(c: Context) {
@@ -56,7 +63,7 @@ export function registRouter(app: Hono, kv: Deno.Kv) {
     const validationResult = SetNHKAPISchema.safeParse(requestJson);
     if (!validationResult.success) {
       console.log(validationResult.error.issues);
-      return c.json("Invalid Body", 401);
+      return c.json(resMessage("Invalid JSON"), 400);
     }
     const validatedNHKAPI: SetNHKAPIRequest = requestJson;
 
@@ -66,10 +73,10 @@ export function registRouter(app: Hono, kv: Deno.Kv) {
     );
     if (!result.ok) {
       console.log(`${validatedNHKAPI}の登録に失敗`);
-      c.json("Failed set nhkapi", 500);
+      c.json(resMessage("Faild set NHKAPI"), 500);
     }
 
-    return c.json("OK");
+    return c.json(resMessage("OK"));
   }
 
   async function SetNotification(c: Context) {
@@ -78,7 +85,7 @@ export function registRouter(app: Hono, kv: Deno.Kv) {
     const validationResult = SetNotificationSchema.safeParse(requestJson);
     if (!validationResult.success) {
       console.log(validationResult.error.issues);
-      return c.json("Invalid Body", 401);
+      return c.json(resMessage("Invalid JSON"), 400);
     }
     const validatedNotification: SetNotificationRequest = requestJson;
 
@@ -88,9 +95,9 @@ export function registRouter(app: Hono, kv: Deno.Kv) {
     );
     if (!result.ok) {
       console.log(`${validatedNotification}の登録に失敗`);
-      c.json("Failed set notification", 500);
+      c.json(resMessage("Failed set notification"), 500);
     }
 
-    return c.json("OK");
+    return c.json(resMessage("OK"));
   }
 }

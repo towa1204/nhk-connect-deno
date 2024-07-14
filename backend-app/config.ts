@@ -1,6 +1,6 @@
-import { getNextWeekDates } from "./date.ts";
-import { convertNHKFormat } from "./date.ts";
-import { getNextDate, getNextWeekDate } from "./date.ts";
+import { getNextWeekDates } from "./util/date.ts";
+import { convertNHKFormat } from "./util/date.ts";
+import { getNextDate, getNextWeekDate } from "./util/date.ts";
 import {
   Config,
   SetNHKAPIRequest,
