@@ -4,7 +4,7 @@ import { logger } from "hono/logger";
 import { runDenoCron } from "./backend-app/cron.ts";
 import { registRouter } from "./backend-app/api.ts";
 
-const kv = await Deno.openKv("sample");
+const kv = await Deno.openKv();
 const app = new Hono();
 
 app.use(logger());
