@@ -10,7 +10,7 @@ import {
 import { loadConfig } from "./config.ts";
 import { resMessage } from "./util/message.ts";
 
-export function registRouter(app: Hono, kv: Deno.Kv, apiKey: string) {
+export function registAPIRouter(app: Hono, kv: Deno.Kv, apiKey: string) {
   app.use("/config/*", async (c, next) => {
     if (c.req.query("key") !== apiKey) {
       return c.json(resMessage("Please specify valid apikey"), 401);
