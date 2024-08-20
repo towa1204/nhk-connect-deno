@@ -58,8 +58,6 @@ export function registAPIRouter(app: Hono, kv: Deno.Kv, apiKey: string) {
 
   async function SetNHKAPI(c: Context) {
     const requestJson = await c.req.json();
-    // デフォルト値追加
-    requestJson["services"] = ["g1", "e1"];
 
     const validationResult = SetNHKAPISchema.safeParse(requestJson);
     if (!validationResult.success) {

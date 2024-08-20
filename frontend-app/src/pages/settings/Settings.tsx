@@ -1,13 +1,57 @@
+import Input from 'components/Input'
 import Select from 'components/Select'
+import { areaMaster, notifyTypeMaster } from 'domain/domain'
 import { useState } from 'react'
+import { useLoaderData } from 'react-router-dom'
+import { Config } from 'domain/schema'
+import { postNHKAPI, postNotification, postPrograms } from 'logics/api'
+import SaveButton from 'components/SaveButton'
+import { DualInputFields } from 'components/DualInputFields'
 
 export default function Settings() {
-  const [selectedArea, setSelectedArea] = useState('option2')
-  const options = [
-    { value: 'option1', label: 'Option 1' },
-    { value: 'option2', label: 'Option 2' },
-    { value: 'option3', label: 'Option 3' }
-  ]
+  const config = useLoaderData() as Config
+  const [stateConfig, setConfig] = useState(config)
+  const [selectedArea, setSelectedArea] = useState(stateConfig.area)
+  const [NHKAPIKey, setNHKAPIKey] = useState(stateConfig.nhkAPIKey)
+
+  const [selectedNotifyType, setNotifyType] = useState(stateConfig.selectNow)
+  const [lineUserID, setLineUserID] = useState(config.LINEAPI.userID)
+  const [lineAccessToken, setLineAccessToken] = useState(
+    config.LINEAPI.accessToken
+  )
+
+  const [fields, setFields] = useState(config.programs)
+
+  const addFields = () => {
+    setFields([...fields, { title: '', keyword: '' }])
+  }
+
+  const handleRemoveField = (index: number) => {
+    const newFields = fields.filter((_, i) => i !== index)
+    setFields(newFields)
+  }
+
+  const handleInputChange = (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const newFields = fields.map((field, i) => {
+      if (i === index) {
+        return { ...field, [event.target.name]: event.target.value }
+      }
+      return field
+    })
+    setFields(newFields)
+  }
+
+  const validateMultiInput = () => {
+    const containsEmpty = fields.some(
+      (field) => field.title === '' || field.keyword === ''
+    )
+    const equalInitialPrograms =
+      JSON.stringify(fields) === JSON.stringify(stateConfig.programs)
+    return containsEmpty || equalInitialPrograms
+  }
 
   return (
     <div className="flex flex-col gap-5">
@@ -22,6 +66,39 @@ export default function Settings() {
             </h3>
           </hgroup>
         </header>
+
+        <div className="mt-3">
+          {fields.map((field, index) => (
+            <DualInputFields
+              key={index}
+              index={index}
+              title={field.title}
+              keyword={field.keyword}
+              handleInputChange={handleInputChange}
+              handleRemoveField={handleRemoveField}
+            />
+          ))}
+
+          <div className="mt-3 flex gap-2">
+            <button
+              onClick={addFields}
+              className="h-8 whitespace-nowrap rounded-md border border-gray-200 bg-gray-100 px-3.5 leading-none text-gray-900  transition-colors duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-200"
+            >
+              Add Fields
+            </button>
+            <SaveButton
+              isDisabled={validateMultiInput()}
+              onClickLogic={() => {
+                postPrograms(fields)
+                const updatedConfig: Config = {
+                  ...stateConfig,
+                  programs: fields
+                }
+                setConfig(updatedConfig)
+              }}
+            />
+          </div>
+        </div>
       </div>
 
       <div className="rounded-md border border-gray-200/60 bg-gray-100/30 p-6">
@@ -38,45 +115,98 @@ export default function Settings() {
 
         <Select
           value={selectedArea}
-          options={options}
+          options={areaMaster}
           setValue={setSelectedArea}
         />
 
+        <Input
+          placeholder="NHK API Key"
+          showOnFocus={true}
+          value={NHKAPIKey}
+          setValue={setNHKAPIKey}
+        />
+
         <div className="mt-3">
-          <div className="relative w-full max-w-sm">
-            <input
-              type="text"
-              id="inputField"
-              className="w-full rounded-lg border px-4 py-2 shadow outline-none hover:border-gray-500"
-              placeholder="NHK API Key"
-            />
-            <button
-              id="clearButton"
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 focus:outline-none"
-            >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 16 16"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M12.7785 3.22908C12.7083 3.15877 12.625 3.10298 12.5332 3.06492C12.4415 3.02686 12.3431 3.00726 12.2438 3.00726C12.1444 3.00726 12.0461 3.02686 11.9543 3.06492C11.8626 3.10298 11.7792 3.15877 11.709 3.22908L8 6.93053L4.29097 3.2215C4.22075 3.15127 4.13738 3.09557 4.04563 3.05756C3.95388 3.01956 3.85554 3 3.75623 3C3.65692 3 3.55859 3.01956 3.46683 3.05756C3.37508 3.09557 3.29172 3.15127 3.2215 3.2215C3.15127 3.29172 3.09557 3.37508 3.05756 3.46683C3.01956 3.55859 3 3.65692 3 3.75623C3 3.85554 3.01956 3.95388 3.05756 4.04563C3.09557 4.13738 3.15127 4.22075 3.2215 4.29097L6.93053 8L3.2215 11.709C3.15127 11.7793 3.09557 11.8626 3.05756 11.9544C3.01956 12.0461 3 12.1445 3 12.2438C3 12.3431 3.01956 12.4414 3.05756 12.5332C3.09557 12.6249 3.15127 12.7083 3.2215 12.7785C3.29172 12.8487 3.37508 12.9044 3.46683 12.9424C3.55859 12.9804 3.65692 13 3.75623 13C3.85554 13 3.95388 12.9804 4.04563 12.9424C4.13738 12.9044 4.22075 12.8487 4.29097 12.7785L8 9.06947L11.709 12.7785C11.7793 12.8487 11.8626 12.9044 11.9544 12.9424C12.0461 12.9804 12.1445 13 12.2438 13C12.3431 13 12.4414 12.9804 12.5332 12.9424C12.6249 12.9044 12.7083 12.8487 12.7785 12.7785C12.8487 12.7083 12.9044 12.6249 12.9424 12.5332C12.9804 12.4414 13 12.3431 13 12.2438C13 12.1445 12.9804 12.0461 12.9424 11.9544C12.9044 11.8626 12.8487 11.7793 12.7785 11.709L9.06947 8L12.7785 4.29097C13.0667 4.00274 13.0667 3.51731 12.7785 3.22908V3.22908Z"
-                  fill="currentColor"
-                ></path>
-              </svg>
-            </button>
-          </div>
+          <SaveButton
+            isDisabled={
+              (NHKAPIKey === '' || NHKAPIKey === stateConfig.nhkAPIKey) &&
+              (selectedArea === '' || selectedArea === stateConfig.area)
+            }
+            onClickLogic={() => {
+              postNHKAPI(selectedArea, NHKAPIKey)
+              const updatedConfig = {
+                ...stateConfig,
+                area: selectedArea,
+                nhkAPIKey: NHKAPIKey
+              }
+
+              setConfig(updatedConfig)
+            }}
+          />
+        </div>
+      </div>
+
+      <div className="rounded-md border border-gray-200/60 bg-gray-100/30 p-6">
+        <header className="mb-4 flex justify-between gap-3">
+          <hgroup>
+            <h2 className="text-lg font-medium !leading-none text-black">
+              Notification
+            </h2>
+            <h3 className="mt-1 !leading-tight text-gray-500">
+              Set notification type and configuration
+            </h3>
+          </hgroup>
+        </header>
+
+        <Select
+          value={selectedNotifyType}
+          options={notifyTypeMaster}
+          setValue={setNotifyType}
+        />
+
+        <div className="mt-5">
+          <header className="mb-4 flex justify-between gap-3">
+            <hgroup>
+              <h3 className="mt-1 font-medium !leading-tight text-black">
+                LINE API
+              </h3>
+            </hgroup>
+          </header>
+          <Input
+            placeholder="UserID"
+            showOnFocus={false}
+            value={lineUserID}
+            setValue={setLineUserID}
+          />
+          <Input
+            placeholder="AccessToken"
+            showOnFocus={true}
+            value={lineAccessToken}
+            setValue={setLineAccessToken}
+          />
         </div>
 
         <div className="mt-3">
-          <button
-            type="button"
-            className=" h-8 cursor-pointer whitespace-nowrap rounded-md border border-gray-200 bg-gray-100 px-3.5 leading-none text-gray-900 transition-colors duration-150 ease-in-out hover:border-gray-300 hover:bg-gray-200 hover:text-gray-900"
-          >
-            Save
-          </button>
+          <SaveButton
+            isDisabled={
+              (lineUserID === '' ||
+                lineUserID === stateConfig.LINEAPI.userID) &&
+              (lineAccessToken === '' ||
+                lineAccessToken === stateConfig.LINEAPI.accessToken)
+            }
+            onClickLogic={() => {
+              postNotification(selectedNotifyType, lineUserID, lineAccessToken)
+              const updatedConfig: Config = {
+                ...stateConfig,
+                LINEAPI: {
+                  userID: lineUserID,
+                  accessToken: lineAccessToken
+                }
+              }
+
+              setConfig(updatedConfig)
+            }}
+          />
         </div>
       </div>
     </div>

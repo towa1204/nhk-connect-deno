@@ -1,18 +1,20 @@
 import { Hono } from "hono";
 import { serveStatic } from "hono/deno";
+import { cors } from "hono/cors";
 import { logger } from "hono/logger";
 import { basicAuth } from "hono/basic-auth";
 import { runDenoCron } from "./backend-app/cron.ts";
 import { registAPIRouter } from "./backend-app/api.ts";
 import { getEnv } from "./env.ts";
 
-const kv = await Deno.openKv("sample");
+const kv = await Deno.openKv();
 const app = new Hono();
 
 const apiKey = getEnv("NCD_API_KEY");
 const user = getEnv("NCD_USER");
 const passwd = getEnv("NCD_PASSWD");
 
+app.use("/api/*", cors());
 app.use(logger());
 
 // ※APIはAPI_KEY認証
