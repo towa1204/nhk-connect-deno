@@ -1,21 +1,35 @@
 import { Hono } from "hono";
 import { serveStatic } from "hono/deno";
-import { notifyWatchPrograms } from "./service.ts";
+import { logger } from "hono/logger";
+import { basicAuth } from "hono/basic-auth";
+import { runDenoCron } from "./backend-app/cron.ts";
+import { registAPIRouter } from "./backend-app/api.ts";
+import { getEnv } from "./env.ts";
 
+const kv = await Deno.openKv("sample");
 const app = new Hono();
 
+const apiKey = getEnv("NCD_API_KEY");
+const user = getEnv("NCD_USER");
+const passwd = getEnv("NCD_PASSWD");
+
+app.use(logger());
+
+// ※APIはAPI_KEY認証
+const api = app.basePath("/api");
+registAPIRouter(api, kv, apiKey);
+
+// ※Web画面はBasic認証
+app.use(
+    "/*",
+    basicAuth({
+        username: user,
+        password: passwd,
+    }),
+);
 app.use("/*", serveStatic({ root: "./frontend-app/dist/" }));
+app.get("*", serveStatic({ path: "./frontend-app/dist/index.html" }));
 
 Deno.serve(app.fetch);
 
-Deno.cron("notification-daily job", "30 22 * * *", async () => {
-  console.log("### 日次通知処理 START ###");
-  await notifyWatchPrograms("daily");
-  console.log("### 日次通知処理 END ###");
-});
-
-Deno.cron("notification-weekly job", "30 22 * * 1", async () => {
-  console.log("### 週次通知処理 START ###");
-  await notifyWatchPrograms("weekly");
-  console.log("### 週次通知処理 END ###");
-});
+await runDenoCron(kv);

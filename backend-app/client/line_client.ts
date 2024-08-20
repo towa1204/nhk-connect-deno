@@ -1,5 +1,5 @@
 import { LINE_MESSAGING_API_BASE_PATH } from "../config.ts";
-import { convertJSTMMDDhhmmFormat } from "../date.ts";
+import { convertJSTMMDDhhmmFormat } from "../util/date.ts";
 import { LinePushRequest, WatchProgram } from "../types.ts";
 
 /**
