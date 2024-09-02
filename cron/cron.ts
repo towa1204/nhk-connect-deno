@@ -1,4 +1,4 @@
-import { loadConfig } from "./config.ts";
+import { loadConfig } from "../api/config.ts";
 import { notifyWatchPrograms } from "./service.ts";
 
 /**

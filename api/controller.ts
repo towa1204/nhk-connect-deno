@@ -8,9 +8,10 @@ import {
   SetProgramSchema,
 } from "./schema.ts";
 import { loadConfig } from "./config.ts";
-import { resMessage } from "./util/message.ts";
+import { resMessage } from "./message.ts";
 
 export function registAPIRouter(app: Hono, kv: Deno.Kv, apiKey: string) {
+  // APIキー認証
   app.use("/config/*", async (c, next) => {
     if (c.req.query("key") !== apiKey) {
       return c.json(resMessage("Please specify valid apikey"), 401);

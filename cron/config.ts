@@ -1,12 +1,6 @@
 import { getNextWeekDates } from "./util/date.ts";
 import { convertNHKFormat } from "./util/date.ts";
 import { getNextDate, getNextWeekDate } from "./util/date.ts";
-import {
-  Config,
-  SetNHKAPIRequest,
-  SetNotificationRequest,
-  SetProgramRequest,
-} from "./schema.ts";
 
 export const NHK_API_BASE_PATH = "https://api.nhk.or.jp/v2";
 export const LINE_MESSAGING_API_BASE_PATH = "https://api.line.me/v2";
@@ -49,40 +43,4 @@ export class ExecuteType {
       throw new Error(`type: ${type}は存在しない。`);
     }
   }
-}
-
-/**
- * DenoKVに格納されている設定情報を読み込む
- * @param kv DenoKv
- * @returns nhk-connect-deno設定情報
- */
-export async function loadConfig(kv: Deno.Kv) {
-  const configPrograms = await kv.get<SetProgramRequest>([
-    "config",
-    "programs",
-  ]);
-  if (configPrograms.value == null) {
-    throw new Error("failed to load config programs");
-  }
-
-  const configNHKAPI = await kv.get<SetNHKAPIRequest>(["config", "nhkapi"]);
-  if (configNHKAPI.value == null) {
-    throw new Error("failed to load config NHKAPI");
-  }
-
-  const configNotification = await kv.get<SetNotificationRequest>([
-    "config",
-    "notification",
-  ]);
-  if (configNotification.value == null) {
-    throw new Error("failed to load config Notification");
-  }
-
-  const config: Config = {
-    ...configPrograms.value,
-    ...configNHKAPI.value,
-    ...configNotification.value,
-  };
-
-  return config;
 }
