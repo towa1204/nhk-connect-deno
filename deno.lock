@@ -2,15 +2,58 @@
   "version": "3",
   "packages": {
     "specifiers": {
-      "jsr:@hono/hono@^4.4.11": "jsr:@hono/hono@4.4.11",
-      "jsr:@std/dotenv@^0.224.2": "jsr:@std/dotenv@0.224.2"
+      "npm:@hono/swagger-ui": "npm:@hono/swagger-ui@0.4.1_hono@4.5.10",
+      "npm:@hono/zod-openapi": "npm:@hono/zod-openapi@0.16.0_hono@4.5.10_zod@3.23.8",
+      "npm:hono": "npm:hono@4.5.10",
+      "npm:zod": "npm:zod@3.23.8"
     },
-    "jsr": {
-      "@hono/hono@4.4.11": {
-        "integrity": "9a739ef99e0b9c5ecb1b25dc8dc4f928cb34d1a6cfdca29a1637db9cbbd660cd"
+    "npm": {
+      "@asteasolutions/zod-to-openapi@7.1.1_zod@3.23.8": {
+        "integrity": "sha512-lF0d1gAc0lYLO9/BAGivwTwE2Sh9h6CHuDcbk5KnGBfIuAsAkDC+Fdat4dkQY3CS/zUWKHRmFEma0B7X132Ymw==",
+        "dependencies": {
+          "openapi3-ts": "openapi3-ts@4.4.0",
+          "zod": "zod@3.23.8"
+        }
       },
-      "@std/dotenv@0.224.2": {
-        "integrity": "29081695357e4534696c9e986b2560be29c141ccf52daa32b6c20ff5b5c64ab9"
+      "@hono/swagger-ui@0.4.1_hono@4.5.10": {
+        "integrity": "sha512-kPaJatHffeYQ3yVkHo878hCqwfapqx54FczJVJ+eRWt8J4biyVVMIdCAJb6MyA8bcnHUoTmUpPc7OJAV1VTg2g==",
+        "dependencies": {
+          "hono": "hono@4.5.10"
+        }
+      },
+      "@hono/zod-openapi@0.16.0_hono@4.5.10_zod@3.23.8": {
+        "integrity": "sha512-jTnccfMTxDmA50FZeyTDD5oNDpcYo0qPzugwMuinnEQRYHLEqOXLv+sP89KNZWCGcL3Ccl+cr5GGE4yxenozqw==",
+        "dependencies": {
+          "@asteasolutions/zod-to-openapi": "@asteasolutions/zod-to-openapi@7.1.1_zod@3.23.8",
+          "@hono/zod-validator": "@hono/zod-validator@0.2.2_hono@4.5.10_zod@3.23.8",
+          "hono": "hono@4.5.10",
+          "zod": "zod@3.23.8"
+        }
+      },
+      "@hono/zod-validator@0.2.2_hono@4.5.10_zod@3.23.8": {
+        "integrity": "sha512-dSDxaPV70Py8wuIU2QNpoVEIOSzSXZ/6/B/h4xA7eOMz7+AarKTSGV8E6QwrdcCbBLkpqfJ4Q2TmBO0eP1tCBQ==",
+        "dependencies": {
+          "hono": "hono@4.5.10",
+          "zod": "zod@3.23.8"
+        }
+      },
+      "hono@4.5.10": {
+        "integrity": "sha512-az6tdU1U8o/l0v8O37FIQuc+ER/TeD9vHt/qs8JnBDgMxw6Zu5L2AixUyHeXZNcu87r7iYo8Ey85R7IogOINKA==",
+        "dependencies": {}
+      },
+      "openapi3-ts@4.4.0": {
+        "integrity": "sha512-9asTNB9IkKEzWMcHmVZE7Ts3kC9G7AFHfs8i7caD8HbI76gEjdkId4z/AkP83xdZsH7PLAnnbl47qZkXuxpArw==",
+        "dependencies": {
+          "yaml": "yaml@2.5.0"
+        }
+      },
+      "yaml@2.5.0": {
+        "integrity": "sha512-2wWLbGbYDiSqqIKoPjar3MPgB94ErzCtrNE1FdqGuaO0pi2JGjmE8aW8TDZwzU7vuxcGRdL/4gPQwQ7hD5AMSw==",
+        "dependencies": {}
+      },
+      "zod@3.23.8": {
+        "integrity": "sha512-XBx9AXhXktjUqnepgTiE5flcKIYWi/rme0Eaj+5Y0lftuGBq+jyRu/md4WnuxqgP1ubdpNCsYEYPxrzVHD8d6g==",
+        "dependencies": {}
       }
     }
   },
@@ -28,8 +71,10 @@
   },
   "workspace": {
     "dependencies": [
-      "jsr:@hono/hono@^4.4.11",
-      "jsr:@std/dotenv@^0.224.2"
+      "npm:@hono/swagger-ui",
+      "npm:@hono/zod-openapi",
+      "npm:hono",
+      "npm:zod"
     ]
   }
 }

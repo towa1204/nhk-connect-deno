@@ -1,3 +1,4 @@
 .env
+.env.develop
+dev.db*
 secrets.json
-deno.json

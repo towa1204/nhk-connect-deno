@@ -1,0 +1,23 @@
+{
+  "deploy": {
+    "project": "0333bf36-16ef-4650-bfe9-796e187b682d",
+    "exclude": [
+      "./tests",
+      "**/node_modules"
+    ],
+    "include": [],
+    "entrypoint": "main.ts"
+  },
+  "imports": {
+    "hono": "npm:hono",
+    "zod": "npm:zod",
+    "@hono/zod-openapi": "npm:@hono/zod-openapi",
+    "@hono/swagger-ui": "npm:@hono/swagger-ui"
+  },
+  "tasks": {
+    "test": "deno test --parallel",
+    "check": "deno fmt --check && deno lint && deno check **/*.ts && deno check **/*.tsx && deno task test",
+    "start": "deno run -A --unstable-cron --unstable-kv --allow-env --env main.ts",
+    "dev": "deno run -A --unstable-cron --unstable-kv --allow-env --env=.env.develop main.ts"
+  }
+}

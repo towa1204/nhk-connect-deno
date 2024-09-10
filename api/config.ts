@@ -10,7 +10,7 @@ import {
  * @param kv DenoKv
  * @returns nhk-connect-deno設定情報
  */
-export async function loadConfig(kv: Deno.Kv) {
+export async function loadConfig(kv: Deno.Kv): Promise<Config> {
   const configPrograms = await kv.get<SetProgramRequest>([
     "config",
     "programs",
