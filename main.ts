@@ -67,6 +67,6 @@ app
     }),
   );
 
-Deno.serve(app.fetch);
+Deno.serve({ port: env.portNumber }, app.fetch);
 
 mountDenoCron(kv);

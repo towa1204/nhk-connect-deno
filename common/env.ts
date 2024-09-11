@@ -17,6 +17,7 @@ export function getEnvObject() {
       token: getEnv("BEARER_TOKEN"),
     },
     kvPath: kvPath,
+    portNumber: Number(getEnv("PORT")),
   };
 }
 
