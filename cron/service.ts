@@ -9,9 +9,7 @@ export async function notifyWatchPrograms(
   type: "daily" | "weekly",
 ) {
   const executeType = new ExecuteType(type);
-  const watchProgramKeywords = config.programs.map((program) =>
-    program.keyword
-  );
+  const watchProgramKeywords = config.programs.map((program) => program.title);
 
   /**
    * 1. 番組情報の取得

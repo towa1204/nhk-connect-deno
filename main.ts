@@ -4,9 +4,8 @@ import { basicAuth } from "hono/basic-auth";
 import { bearerAuth } from "hono/bearer-auth";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { runDenoCron } from "./cron/cron.ts";
-import { registAPIRouter } from "./api/controller.ts";
-import { Env, getEnvObject } from "./env.ts";
+import { mountDenoCron } from "./cron/cron.ts";
+import { Env, getEnvObject } from "./common/env.ts";
 import api from "./api/api.ts";
 
 const env = getEnvObject();
@@ -32,7 +31,7 @@ app
     }),
   )
   .use(
-    "/ui",
+    "/",
     basicAuth({
       username: env.basic.user,
       password: env.basic.passwd,
@@ -55,7 +54,7 @@ app
     },
   })
   .get(
-    "/ui",
+    "/",
     swaggerUI({
       url: "/doc",
       requestInterceptor: `
@@ -70,4 +69,4 @@ app
 
 Deno.serve(app.fetch);
 
-// await runDenoCron(kv);
+mountDenoCron(kv);

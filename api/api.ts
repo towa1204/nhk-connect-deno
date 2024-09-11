@@ -1,13 +1,12 @@
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { Env } from "../env.ts";
+import { Env } from "../common/env.ts";
 import {
   getConfigAllRoute,
   postNHKAPIRoute,
   postNotificationRoute,
   postProgramTitleRoute,
 } from "./route.ts";
-import { loadConfig } from "./config.ts";
-import { ConfigSchema } from "./schema.ts";
+import { loadConfig } from "../common/dao.ts";
 
 const api = new OpenAPIHono<Env>({
   defaultHook: (result, c) => {
@@ -25,18 +24,11 @@ api
   .openapi(getConfigAllRoute, async (c) => {
     try {
       const config = await loadConfig(c.var.kv);
-      const result = ConfigSchema.safeParse(config);
-      if (!result.success) {
-        return c.json({
-          message: "Invalid config data",
-          details: result.error.errors,
-        }, 500);
-      }
-      return c.json(result.data, 200);
+      return c.json(config, 200);
     } catch (err) {
       console.error(err);
       return c.json({
-        message: "please retry post",
+        message: "Internal Server Error",
         details: null,
       }, 500);
     }
@@ -51,7 +43,7 @@ api
     if (!result.ok) {
       console.log(`${json}の登録に失敗`);
       return c.json({
-        message: "please retry post",
+        message: "Internal Server Error",
         details: null,
       }, 500);
     }
@@ -68,7 +60,7 @@ api
     if (!result.ok) {
       console.log(`${json}の登録に失敗`);
       return c.json({
-        message: "please retry post",
+        message: "Internal Server Error",
         details: null,
       }, 500);
     }
@@ -85,7 +77,7 @@ api
     if (!result.ok) {
       console.log(`${json}の登録に失敗`);
       return c.json({
-        message: "please retry post",
+        message: "Internal Server Error",
         details: null,
       }, 500);
     }

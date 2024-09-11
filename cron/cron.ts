@@ -1,4 +1,4 @@
-import { loadConfig } from "../api/config.ts";
+import { loadConfig } from "../common/dao.ts";
 import { notifyWatchPrograms } from "./service.ts";
 
 /**
@@ -6,7 +6,7 @@ import { notifyWatchPrograms } from "./service.ts";
  * Deno Cronの実行はオプショナルにする（フラグつけたとき）
  * Deno KVのインスタンスをどうわたすか？
  */
-export async function runDenoCron(kv: Deno.Kv) {
+export async function mountDenoCron(kv: Deno.Kv) {
   try {
     const config = await loadConfig(kv);
 
