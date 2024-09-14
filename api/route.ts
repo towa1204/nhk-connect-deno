@@ -1,11 +1,11 @@
 import { createRoute } from "@hono/zod-openapi";
 import {
   ConfigSchema,
-  ErrorSchema,
   NHKAPISchema,
   NotificationSchema,
   ProgramTitleSchema,
 } from "./schema.ts";
+import { errorResponses } from "./error.schema.ts";
 
 export const getConfigAllRoute = createRoute({
   method: "get",
@@ -20,14 +20,24 @@ export const getConfigAllRoute = createRoute({
         },
       },
     },
-    500: {
-      description: "Internal Server Error",
+    ...errorResponses,
+  },
+});
+
+export const getProgramTitleRoute = createRoute({
+  method: "get",
+  path: "programs",
+  summary: "通知対象の番組情報を取得する",
+  responses: {
+    200: {
+      description: "OK",
       content: {
         "application/json": {
-          schema: ErrorSchema,
+          schema: ProgramTitleSchema,
         },
       },
     },
+    ...errorResponses,
   },
 });
 
@@ -49,14 +59,7 @@ export const postProgramTitleRoute = createRoute({
     200: {
       description: "OK",
     },
-    400: {
-      description: "Validation Error",
-      content: {
-        "application/json": {
-          schema: ErrorSchema,
-        },
-      },
-    },
+    ...errorResponses,
   },
 });
 
@@ -78,14 +81,24 @@ export const postNHKAPIRoute = createRoute({
     200: {
       description: "OK",
     },
-    400: {
-      description: "Validation Error",
+    ...errorResponses,
+  },
+});
+
+export const getNHKAPIRoute = createRoute({
+  method: "get",
+  path: "nhkapi",
+  summary: "APIキーと放送地域を取得",
+  responses: {
+    200: {
+      description: "OK",
       content: {
         "application/json": {
-          schema: ErrorSchema,
+          schema: NHKAPISchema,
         },
       },
     },
+    ...errorResponses,
   },
 });
 
@@ -107,13 +120,23 @@ export const postNotificationRoute = createRoute({
     200: {
       description: "OK",
     },
-    400: {
-      description: "Validation Error",
+    ...errorResponses,
+  },
+});
+
+export const getNotificationRoute = createRoute({
+  method: "get",
+  path: "notification",
+  summary: "番組の通知先を取得",
+  responses: {
+    200: {
+      description: "OK",
       content: {
         "application/json": {
-          schema: ErrorSchema,
+          schema: NotificationSchema,
         },
       },
     },
+    ...errorResponses,
   },
 });

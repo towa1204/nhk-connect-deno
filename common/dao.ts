@@ -14,7 +14,7 @@ export async function loadConfig(kv: Deno.Kv): Promise<Config> {
 
   const res = ConfigSchema.safeParse(receiveConfig);
   if (!res.success) {
-    throw new Error("failed to load config", res.error);
+    throw new Error("failed to load config", { cause: res.error });
   }
 
   return res.data;
