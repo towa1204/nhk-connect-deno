@@ -1,6 +1,7 @@
 // https://zenn.dev/aishift/articles/a3dc8dcaac6bfa
 import { z } from "@hono/zod-openapi";
 
+// deno-lint-ignore no-explicit-any
 const errorSchemaFactory = (code: z.ZodEnum<any>) => {
   return z.object({
     code: code.openapi({

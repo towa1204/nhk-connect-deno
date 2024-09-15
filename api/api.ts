@@ -23,7 +23,10 @@ const api = new OpenAPIHono<Env>({
       console.log(result.error.issues);
       return c.json({
         code: "BAD_REQUEST",
-        message: result.error.issues.map((issue) => issue.message).join(", "),
+        message: result.error.issues.map((issue) => {
+          const field = issue.path.join(".");
+          return `${field}: ${issue.message}`;
+        }).join(", "),
       }, 400);
     }
   },
