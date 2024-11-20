@@ -3,6 +3,11 @@ import { ProgramListReq, ProgramListRes } from "../types.ts";
 
 /**
  * NHK Program List API
+ *
+ * 正常なステータスであればJSONレスポンスを返す。
+ * 異常なステータスであれば例外を送出する。
+ * @param Program List APIの必須パラメータを含めたオブジェクト
+ * @returns JSONレスポンス
  */
 export async function fetchProgramList(
   { area, service, date, apikey }: ProgramListReq,
