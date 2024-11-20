@@ -17,7 +17,7 @@
   "tasks": {
     "test": "deno test --parallel",
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno task test",
-    "start": "deno run -A --unstable-cron --unstable-kv --allow-env --env main.ts",
-    "dev": "deno run -A --unstable-cron --unstable-kv --allow-env --env=.env.develop main.ts"
+    "start": "deno run -A --unstable-cron --unstable-kv --env main.ts",
+    "dev": "deno run -A --unstable-cron --unstable-kv --env=.env.develop main.ts"
   }
 }
