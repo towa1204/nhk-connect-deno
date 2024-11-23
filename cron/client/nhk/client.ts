@@ -1,5 +1,6 @@
-import { NHK_API_BASE_PATH } from "../config.ts";
-import { ProgramListReq, ProgramListRes } from "../types.ts";
+import { NHK_API_BASE_PATH } from "../../config.ts";
+import { ProgramListReq, ProgramListRes } from "../../types.ts";
+import { APIClientStatusException } from "../exception.ts";
 
 /**
  * NHK Program List API
@@ -15,14 +16,13 @@ export async function fetchProgramList(
   const url =
     `${NHK_API_BASE_PATH}/pg/list/${area}/${service}/${date}.json?key=${apikey}`;
   const res = await fetch(url);
+
   if (!res.ok) {
-    const errorMessage = [
-      `ProgramList APIへの接続に失敗しました。`,
-      `URL: ${url}`,
-      `ステータスコード: ${res.status}`,
-      `メッセージ: ${await res.text()}`,
-    ].join("\n");
-    throw new Error(errorMessage);
+    throw new APIClientStatusException({
+      status: res.status,
+      summary: "ProgramList APIへの接続に失敗",
+      detail: await res.text(),
+    });
   }
   return await res.json() as ProgramListRes;
 }

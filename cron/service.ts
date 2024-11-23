@@ -1,6 +1,6 @@
 import { Program, ProgramsListReq, WatchProgram } from "./types.ts";
-import { fetchProgramList } from "./client/nhk_client.ts";
-import { createLINEMessage, sendLINEMessage } from "./client/line_client.ts";
+import { fetchProgramList } from "./client/nhk/client.ts";
+import { createLINEMessage, sendLINEMessage } from "./client/line/client.ts";
 import { ExecuteType } from "./config.ts";
 import { Config } from "../api/schema.ts";
 

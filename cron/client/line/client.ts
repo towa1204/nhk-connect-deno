@@ -1,11 +1,13 @@
-import { LINE_MESSAGING_API_BASE_PATH } from "../config.ts";
-import { convertJSTMMDDhhmmFormat } from "../util/date.ts";
-import { LinePushRequest, WatchProgram } from "../types.ts";
+import { LINE_MESSAGING_API_BASE_PATH } from "../../config.ts";
+import { convertJSTMMDDhhmmFormat } from "../../util/date.ts";
+import { LinePushRequest, WatchProgram } from "../../types.ts";
+import { APIClientStatusException } from "../exception.ts";
 
 /**
  * LINE Messaging Push API
- * 仕様は下記リンク参照
- * ・https://developers.line.biz/ja/reference/messaging-api/
+ *
+ * ドキュメント: https://developers.line.biz/ja/reference/messaging-api/
+ * @throws APIClientStatusException
  */
 export async function sendLINEMessage(
   { userID, accessToken, message }: LinePushRequest,
@@ -17,7 +19,9 @@ export async function sendLINEMessage(
       text: message,
     }],
   };
-  const res = await fetch(`${LINE_MESSAGING_API_BASE_PATH}/bot/message/push`, {
+
+  const url = `${LINE_MESSAGING_API_BASE_PATH}/bot/message/push`;
+  const res = await fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -25,14 +29,16 @@ export async function sendLINEMessage(
     },
     body: JSON.stringify(payload),
   });
+
   if (!res.ok) {
-    const errorMessage = [
-      `LINE Messaging Push APIへの接続に失敗しました。`,
-      `ステータスコード: ${res.status}`,
-      `メッセージ: ${await res.text()}`,
-    ].join("\n");
-    throw new Error(errorMessage);
+    throw new APIClientStatusException({
+      status: res.status,
+      summary: "LINE Messaging Push APIへの接続に失敗",
+      detail: await res.text(),
+    });
   }
+
+  await res.body?.cancel();
 }
 
 export function createLINEMessage(
