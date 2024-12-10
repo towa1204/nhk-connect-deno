@@ -55,10 +55,12 @@ api.openapi(getConfigAllRoute, async (c) => {
 
 api.openapi(getProgramTitleRoute, async (c) => {
   const result = await c.var.kv.get(["config", "programs"]);
+
   const validationResult = ProgramTitleSchema.safeParse(result.value);
   if (!validationResult.success) {
     throw new HTTPException(500, { message: "取得データマッピングエラー" });
   }
+
   return c.json(validationResult.data, 200);
 });
 
@@ -82,10 +84,12 @@ api.openapi(postProgramTitleRoute, async (c) => {
 
 api.openapi(getNHKAPIRoute, async (c) => {
   const result = await c.var.kv.get(["config", "nhkapi"]);
+
   const validationResult = NHKAPISchema.safeParse(result.value);
   if (!validationResult.success) {
     throw new HTTPException(500, { message: "取得データマッピングエラー" });
   }
+
   return c.json(validationResult.data, 200);
 });
 
@@ -111,6 +115,7 @@ api.openapi(getNotificationRoute, async (c) => {
   if (!validationResult.success) {
     throw new HTTPException(500, { message: "取得データマッピングエラー" });
   }
+
   return c.json(validationResult.data, 200);
 });
 
