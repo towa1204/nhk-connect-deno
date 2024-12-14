@@ -10,13 +10,14 @@
   },
   "imports": {
     "@std/assert": "jsr:@std/assert@^1.0.8",
+    "@std/testing": "jsr:@std/testing@^1.0.6",
     "hono": "npm:hono",
     "zod": "npm:zod",
     "@hono/zod-openapi": "npm:@hono/zod-openapi",
     "@hono/swagger-ui": "npm:@hono/swagger-ui"
   },
   "tasks": {
-    "test": "deno test --parallel",
+    "test": "deno test -A --unstable-kv --parallel",
     "check": "deno fmt --check && deno lint && deno check **/*.ts && deno task test",
     "start": "deno run -A --unstable-cron --unstable-kv --env main.ts",
     "dev": "deno run -A --unstable-cron --unstable-kv --env=.env.develop main.ts"
