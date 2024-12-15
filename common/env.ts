@@ -1,9 +1,3 @@
-export type Env = {
-  Variables: {
-    kv: Deno.Kv;
-  };
-};
-
 export type EnvObject = {
   basic: {
     user: string;

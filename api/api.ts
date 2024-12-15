@@ -1,6 +1,5 @@
 import { HTTPException } from "hono/http-exception";
 import { OpenAPIHono } from "@hono/zod-openapi";
-import { Env } from "../common/env.ts";
 import {
   getConfigAllRoute,
   getProgramTitleRoute,
@@ -16,6 +15,7 @@ import {
 } from "./schema.ts";
 import { getNHKAPIRoute } from "./route.ts";
 import { getNotificationRoute } from "./route.ts";
+import { Env } from "../app.ts";
 
 const api = new OpenAPIHono<Env>({
   defaultHook: (result, c) => {
