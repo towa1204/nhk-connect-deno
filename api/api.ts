@@ -15,7 +15,7 @@ import {
 } from "./schema.ts";
 import { getNHKAPIRoute } from "./route.ts";
 import { getNotificationRoute } from "./route.ts";
-import { Env } from "../app.ts";
+import { Env } from "./app.ts";
 
 const api = new OpenAPIHono<Env>({
   defaultHook: (result, c) => {

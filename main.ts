@@ -1,6 +1,6 @@
 import { mountDenoCron } from "./cron/cron.ts";
 import { getEnvObject } from "./common/env.ts";
-import { createApp } from "./app.ts";
+import { createApp } from "./api/app.ts";
 
 const env = getEnvObject();
 const kv = env.kvPath != undefined

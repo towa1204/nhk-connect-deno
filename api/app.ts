@@ -3,8 +3,8 @@ import { basicAuth } from "hono/basic-auth";
 import { bearerAuth } from "hono/bearer-auth";
 import { cors } from "hono/cors";
 import { logger } from "hono/logger";
-import { EnvObject } from "./common/env.ts";
-import api from "./api/api.ts";
+import { EnvObject } from "../common/env.ts";
+import api from "./api.ts";
 import { OpenAPIHono } from "@hono/zod-openapi";
 
 export type Env = {
