@@ -1,0 +1,8 @@
+{
+  "area": "140",
+  "services": [
+    "g1",
+    "e1"
+  ],
+  "nhkAPIKey": "nhk-api-key"
+}
