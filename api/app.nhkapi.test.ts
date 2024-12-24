@@ -1,6 +1,6 @@
 import { assertEquals } from "@std/assert";
 import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
-import { setTestDataMultiple } from "../common/kv_test_helper.ts";
+import { setTestDataMultipleFromFile } from "../common/kv_test_helper.ts";
 import { createApp } from "./app.ts";
 import { EnvObject } from "../common/env.ts";
 
@@ -21,7 +21,7 @@ describe("nhkapi", () => {
 
   beforeEach(async () => {
     kv = await Deno.openKv(":memory:");
-    await setTestDataMultiple(kv, [
+    await setTestDataMultipleFromFile(kv, [
       {
         key: ["config", "programs"],
         fileName: "testdata/config_programs.json",
