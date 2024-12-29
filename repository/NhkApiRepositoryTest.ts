@@ -1,7 +1,7 @@
 import { assertEquals } from "@std/assert";
 import { afterEach, beforeEach, describe, it } from "@std/testing/bdd";
-import { setTestDataFromFile } from "./kv_test_helper.ts";
-import { KV_KEYS } from "./KvKey.ts";
+import { setTestDataFromFile } from "../common/kv_test_helper.ts";
+import { KV_KEYS } from "../common/KvKey.ts";
 import { NhkApiRepository } from "./NhkApiRepository.ts";
 
 describe("NhkApiRepository#get", () => {

@@ -7,12 +7,6 @@ import {
   postNotificationRoute,
   postProgramTitleRoute,
 } from "./route.ts";
-import { loadConfig } from "../common/dao.ts";
-import {
-  NHKAPISchema,
-  NotificationSchema,
-  ProgramTitleSchema,
-} from "./schema.ts";
 import { getNHKAPIRoute } from "./route.ts";
 import { getNotificationRoute } from "./route.ts";
 import { Env } from "./app.ts";
@@ -42,7 +36,7 @@ api.onError((err, c) => {
 
 api.openapi(getConfigAllRoute, async (c) => {
   try {
-    const config = await loadConfig(c.var.kv);
+    const config = await c.var.configRepository.get();
     return c.json(config, 200);
   } catch (err) {
     throw new HTTPException(500, { cause: err });
@@ -54,26 +48,19 @@ api.openapi(getConfigAllRoute, async (c) => {
  */
 
 api.openapi(getProgramTitleRoute, async (c) => {
-  const result = await c.var.kv.get(["config", "programs"]);
+  const result = await c.var.programsRepository.get();
 
-  const validationResult = ProgramTitleSchema.safeParse(result.value);
-  if (!validationResult.success) {
+  if (result == null) {
     throw new HTTPException(500, { message: "取得データマッピングエラー" });
   }
 
-  return c.json(validationResult.data, 200);
+  return c.json(result, 200);
 });
 
 api.openapi(postProgramTitleRoute, async (c) => {
   const json = c.req.valid("json");
 
-  const result = await c.var.kv.set(
-    ["config", "programs"],
-    json,
-  );
-  if (!result.ok) {
-    throw new HTTPException(500, { message: "KV Setエラー" });
-  }
+  await c.var.programsRepository.save(json);
 
   return c.body(null, 200);
 });
@@ -83,23 +70,19 @@ api.openapi(postProgramTitleRoute, async (c) => {
  */
 
 api.openapi(getNHKAPIRoute, async (c) => {
-  const result = await c.var.kv.get(["config", "nhkapi"]);
+  const result = await c.var.nhkapiRepository.get();
 
-  const validationResult = NHKAPISchema.safeParse(result.value);
-  if (!validationResult.success) {
+  if (result == null) {
     throw new HTTPException(500, { message: "取得データマッピングエラー" });
   }
 
-  return c.json(validationResult.data, 200);
+  return c.json(result, 200);
 });
 
 api.openapi(postNHKAPIRoute, async (c) => {
   const json = c.req.valid("json");
 
-  const result = await c.var.kv.set(["config", "nhkapi"], json);
-  if (!result.ok) {
-    throw new HTTPException(500, { message: "KV Setエラー" });
-  }
+  await c.var.nhkapiRepository.save(json);
 
   return c.body(null, 200);
 });
@@ -109,23 +92,19 @@ api.openapi(postNHKAPIRoute, async (c) => {
  */
 
 api.openapi(getNotificationRoute, async (c) => {
-  const result = await c.var.kv.get(["config", "notification"]);
+  const result = await c.var.notificationRepository.get();
 
-  const validationResult = NotificationSchema.safeParse(result.value);
-  if (!validationResult.success) {
+  if (result == null) {
     throw new HTTPException(500, { message: "取得データマッピングエラー" });
   }
 
-  return c.json(validationResult.data, 200);
+  return c.json(result, 200);
 });
 
 api.openapi(postNotificationRoute, async (c) => {
   const json = c.req.valid("json");
 
-  const result = await c.var.kv.set(["config", "notification"], json);
-  if (!result.ok) {
-    throw new HTTPException(500, { message: "KV Setエラー" });
-  }
+  await c.var.notificationRepository.save(json);
 
   return c.body(null, 200);
 });

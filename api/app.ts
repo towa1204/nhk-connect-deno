@@ -6,10 +6,17 @@ import { logger } from "hono/logger";
 import { EnvObject } from "../common/env.ts";
 import api from "./api.ts";
 import { OpenAPIHono } from "@hono/zod-openapi";
+import { ProgramsRepository } from "../repository/ProgramsRepository.ts";
+import { NhkApiRepository } from "../repository/NhkApiRepository.ts";
+import { NotificationRepository } from "../repository/NotificationRepository.ts";
+import { ConfigRepository } from "../repository/ConfigRepository.ts";
 
 export type Env = {
   Variables: {
-    kv: Deno.Kv;
+    programsRepository: ProgramsRepository;
+    nhkapiRepository: NhkApiRepository;
+    notificationRepository: NotificationRepository;
+    configRepository: ConfigRepository;
   };
 };
 
@@ -39,7 +46,10 @@ export function createApp(env: EnvObject, kv: Deno.Kv) {
       }),
     )
     .use(async (c, next) => {
-      c.set("kv", kv);
+      c.set("programsRepository", new ProgramsRepository(kv));
+      c.set("nhkapiRepository", new NhkApiRepository(kv));
+      c.set("notificationRepository", new NotificationRepository(kv));
+      c.set("configRepository", new ConfigRepository(kv));
       await next();
     });
 
